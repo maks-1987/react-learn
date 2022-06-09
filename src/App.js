@@ -4,6 +4,8 @@ import { useState, useMemo } from 'react';
 import PostList from './components/PostList';
 import PostForm from './components/PostForm';
 import PostFilter from './components/PostFilter';
+import MyModal from './components/UI/modal/MyModal';
+import MyButton from './components/UI/button/MyButton';
 
 function App() {
   const [posts, setPosts] = useState([
@@ -13,6 +15,7 @@ function App() {
   ]);
 
   const [filter, setFilter] = useState({ sort: '', query: '' });
+  const [modal, setModal] = useState(false);
 
   const sortedPosts = useMemo(() => {
     console.log('worked');
@@ -28,6 +31,7 @@ function App() {
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
+    setModal(false)   
   };
   // получает post из дочернего компонента
   const removePost = (post) => {
@@ -36,8 +40,14 @@ function App() {
 
   return (
     <div className="App">
+      <MyButton onClick={()=> setModal(true)}>
+        Edit post
+      </MyButton>
+      <MyModal visible={modal} setVisible={setModal}>
+        <PostForm create={createPost} />
+      </MyModal>
       <Counter />
-      <PostForm create={createPost} />
+
       <hr style={{ margin: '10px 0px' }} />
       <PostFilter filter={filter} setFilter={setFilter} />
       <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список постов 2" />
